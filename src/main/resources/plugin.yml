@@ -1,0 +1,8 @@
+name: BlockBreakExpansion
+main: xyz.oribuin.blockbreak.BlockStatisticPlugin
+version: '@version@'
+api-version: '1.17'
+author: Oribuin
+description: A plugin that calculates blocks broken.
+depend:
+  - PlaceholderAPI

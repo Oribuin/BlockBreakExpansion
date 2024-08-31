@@ -1,0 +1,50 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id "java-library"
+    id "com.github.johnrengelman.shadow" version "7.1.0"
+}
+
+group = 'xyz.oribuin'
+version = '1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+compileJava {
+    options.compilerArgs += ['-parameters']
+    options.fork = true
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven { url = "https://libraries.minecraft.net" }
+    maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+    maven { url = "https://repo.extendedclip.com/content/repositories/placeholderapi/" }
+}
+
+dependencies {
+    compileOnly "org.spigotmc:spigot-api:${spigotVersion}-R0.1-SNAPSHOT"
+    compileOnly "me.clip:placeholderapi:2.11.6"
+}
+
+shadowJar {
+    archiveClassifier.set(null)
+}
+
+// Include version replacement
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include '**/*.yml'
+        filter ReplaceTokens, tokens: ["version": project.property("version")]
+        duplicatesStrategy DuplicatesStrategy.INCLUDE
+    }
+}
+
+build.dependsOn shadowJar
